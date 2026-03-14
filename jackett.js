@@ -147,9 +147,11 @@ export default new class Jackett {
    */
   async test() {
     try {
-      const res = await fetch('http://127.0.0.1:9117/api/v2.0/server/config', {
-        signal: AbortSignal.timeout(5000),
-      })
+      // /server/config redirects to login UI; use Torznab caps instead — always 200
+      const res = await fetch(
+        'http://127.0.0.1:9117/api/v2.0/indexers/all/results/torznab/api?t=caps',
+        { signal: AbortSignal.timeout(5000) },
+      )
       return res.ok
     } catch {
       return false
