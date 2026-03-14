@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Jackett",
+    "id": "local.extension.jackett",
+    "version": "1.0.0",
+    "type": "torrent",
+    "accuracy": "medium",
+    "ratio": 0,
+    "media": "both",
+    "languages": ["all"],
+    "description": "Search all configured Jackett indexers on your local machine.",
+    "icon": "https://raw.githubusercontent.com/Jackett/Jackett/master/src/Jackett.Common/Content/favicon.ico",
+    "update": "https://raw.githubusercontent.com/wloodheart/hayase-jackett/main/index.json",
+    "code": "https://raw.githubusercontent.com/wloodheart/hayase-jackett/main/jackett.js",
+    "options": {
+      "url": {
+        "type": "string",
+        "description": "Jackett base URL (e.g. http://127.0.0.1:9117)",
+        "default": "http://127.0.0.1:9117"
+      },
+      "apikey": {
+        "type": "string",
+        "description": "Jackett API key — found in Jackett → Settings → API Key",
+        "default": ""
+      },
+      "indexer": {
+        "type": "string",
+        "description": "Jackett indexer ID to query. Use 'all' to search every configured indexer.",
+        "default": "all"
+      }
+    }
+  }
+]
