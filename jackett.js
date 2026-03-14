@@ -19,7 +19,7 @@ export default new class Jackett {
    * @param {string[]} categories - Torznab category IDs to filter by
    * @returns {Promise<TorrentResult[]>}
    */
-  async _search(query, options, categories) {
+  async _search(query, options, categories, fetchFn) {
     const base    = String(options?.url     || 'http://127.0.0.1:9117').replace(/\/$/, '')
     const apiKey  = String(options?.apikey  || '')
     const indexer = String(options?.indexer || 'all')
@@ -30,7 +30,8 @@ export default new class Jackett {
     }
 
     const url = `${base}/api/v2.0/indexers/${indexer}/results?${params}`
-    const res = await fetch(url)
+    // Use Hayase-provided fetch to bypass mixed-content/CORS restrictions
+    const res = await fetchFn(url)
 
     if (!res.ok) throw new Error(`Jackett: HTTP ${res.status} — check URL and API key`)
 
@@ -103,10 +104,10 @@ export default new class Jackett {
    * @param {object}       options
    * @returns {Promise<TorrentResult[]>}
    */
-  async single({ titles, episode }, options) {
+  async single({ titles, episode, fetch: fetchFn }, options) {
     if (!titles?.length) return []
     const q = this._buildQuery(titles, episode)
-    return this._search(q, options, ['5070', '5000'])
+    return this._search(q, options, ['5070', '5000'], fetchFn)
   }
 
   /**
@@ -117,9 +118,9 @@ export default new class Jackett {
    * @param {object}       options
    * @returns {Promise<TorrentResult[]>}
    */
-  async batch({ titles }, options) {
+  async batch({ titles, fetch: fetchFn }, options) {
     if (!titles?.length) return []
-    return this._search(titles[0], options, ['5070', '5000'])
+    return this._search(titles[0], options, ['5070', '5000'], fetchFn)
   }
 
   /**
@@ -130,9 +131,9 @@ export default new class Jackett {
    * @param {object}       options
    * @returns {Promise<TorrentResult[]>}
    */
-  async movie({ titles }, options) {
+  async movie({ titles, fetch: fetchFn }, options) {
     if (!titles?.length) return []
-    return this._search(titles[0], options, ['2000', '2010', '2020'])
+    return this._search(titles[0], options, ['2000', '2010', '2020'], fetchFn)
   }
 
   /**
